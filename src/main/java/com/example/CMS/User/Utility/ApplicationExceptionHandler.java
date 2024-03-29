@@ -5,7 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.example.CMS.User.Exception.BlogAlreadyExistsByTitleException;
+import com.example.CMS.User.Exception.TitleNotAvailableException;
 import com.example.CMS.User.Exception.UserAlreadyExistByEmailException;
+import com.example.CMS.User.Exception.UserNotFoundByIdException;
 
 import lombok.AllArgsConstructor;
 
@@ -36,6 +39,28 @@ public class ApplicationExceptionHandler {
 	{
 		return errorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(),
 				"user already exists with the given email");
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleBlogAlreadyExistsByTitle(
+			BlogAlreadyExistsByTitleException ex)
+	{
+		return errorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(),
+				"blog already exists with the given title");
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleUserNotFoundById(
+			UserNotFoundByIdException ex)
+	{
+		return errorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), "user not found by id");
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorStructure<String>> handleTitleNotAvailableException(
+			TitleNotAvailableException ex)
+	{
+		return errorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), "Title not available");
 	}
 	
 

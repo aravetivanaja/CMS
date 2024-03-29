@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.CMS.User.DTO.UserReq;
 import com.example.CMS.User.Exception.UserAlreadyExistByEmailException;
+import com.example.CMS.User.Exception.UserNotFoundByIdException;
 import com.example.CMS.User.Model.User;
 import com.example.CMS.User.Repository.UserRepository;
 import com.example.CMS.User.ResponseDTO.UserResponse;
@@ -51,9 +52,32 @@ public class UserServiceImpl implements UserService{
 		return ResponseEntity.ok(responseStructure.setMessage("user registered successfully")
 				.setStatusCode(HttpStatus.OK.value())
 				.setData(mapToUserResponse(ur.save(mapToUserRequest(userRequest, new User())))));
-		 
-
 		
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<UserResponse>> softDeleteUserById(int userId) {
+		return ur.findById(userId).map(user ->{
+			user.setDeleted(true);
+			ur.save(user);
+			return ResponseEntity.ok(responseStructure.setMessage("deleted user successfully")
+					.setStatusCode(HttpStatus.OK.value())
+					.setData(mapToUserResponse(user)));
+		}).orElseThrow(()-> new UserNotFoundByIdException("user not found by id"));
+		
+		
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<UserResponse>> findUserById(int userId) {
+		return ur.findById(userId).map(user->{
+			if(!user.isDeleted())
+				return ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
+						.setMessage("user found")
+						.setData(mapToUserResponse(user)));
+			throw new UserNotFoundByIdException("user id already deleted");
+		}).orElseThrow(()-> new UserNotFoundByIdException("user id not found"));
+
 	}
 	
 
