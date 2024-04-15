@@ -4,17 +4,22 @@ import java.util.Arrays;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.CMS.User.DTO.BlogRequest;
 import com.example.CMS.User.Exception.BlogAlreadyExistsByTitleException;
 import com.example.CMS.User.Exception.BlogNotFoundByIdException;
+import com.example.CMS.User.Exception.IllegalAccessRequestException;
 import com.example.CMS.User.Exception.TopicNotSpecifiedException;
 import com.example.CMS.User.Exception.UserNotFoundByIdException;
 import com.example.CMS.User.Model.Blog;
+import com.example.CMS.User.Model.User;
 import com.example.CMS.User.Repository.BlogRepository;
+import com.example.CMS.User.Repository.ContributionPanelRepository;
 import com.example.CMS.User.Repository.UserRepository;
 import com.example.CMS.User.ResponseDTO.BlogResponse;
+import com.example.CMS.User.ResponseDTO.ContributionPanelResponse;
 import com.example.CMS.User.Service.BlogService;
 import com.example.CMS.User.Utility.ResponseStructure;
 
@@ -23,13 +28,16 @@ public class BlogServiceImpl implements BlogService{
 	
 	private BlogRepository br;
 	private UserRepository ur;
+	private ContributionPanelRepository cpr;
 	private ResponseStructure<BlogResponse> responseStructure;
 
-	public BlogServiceImpl(BlogRepository br, UserRepository ur,    ResponseStructure<BlogResponse> responseStructure) {
+	public BlogServiceImpl(BlogRepository br, UserRepository ur,    ResponseStructure<BlogResponse> responseStructure,ContributionPanelRepository cpr) {
 		super();
 		this.br = br;
 		this.ur=ur;
 		this.responseStructure = responseStructure;
+		this.cpr=cpr;
+		
 	}
 
 	@Override
@@ -40,8 +48,9 @@ public class BlogServiceImpl implements BlogService{
 			if(blogReq.getTopics().length<1)
 				throw new TopicNotSpecifiedException("failed to create blog");
 		Blog blog=mapToBlogRequest(blogReq, new Blog());
-		blog.setUsersList(Arrays.asList(user));
-		br.save(blog);
+		//blog.setUsersList(Arrays.asList(user));
+		user.getBlogs().add(blog);
+		ur.save(user);
 		return ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
 				.setMessage("blog is created")
 				.setData(mapToBlogResponse(blog)));
@@ -62,7 +71,8 @@ public class BlogServiceImpl implements BlogService{
 		blog.setTitle(blogReq.getTitle());
 		blog.setTopics(blogReq.getTopics());
 		blog.setSummary(blogReq.getSummary());
-		blog.setUsersList(blogReq.getUsers());
+		//blog.setUsersList(blogReq.getUsers());
+		blog.setUser(blogReq.getUser());
 		return blog;
 	}
 	
@@ -95,10 +105,9 @@ public class BlogServiceImpl implements BlogService{
 			blog.setTopics(blogReq.getTopics());
 			blog.setSummary(blogReq.getSummary());
 			
-			Blog newBlog= br.save(blog);
 			return ResponseEntity.ok(responseStructure.setStatusCode(HttpStatus.OK.value())
 					.setMessage("blog updated by id")
-					.setData(mapToBlogResponse(blog))
+					.setData(mapToBlogResponse(br.save(blog)))
 					);
 			
 		}).orElseThrow(()-> new  BlogNotFoundByIdException("invalid blog"));

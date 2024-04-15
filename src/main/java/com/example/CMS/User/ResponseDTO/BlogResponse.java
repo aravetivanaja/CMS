@@ -19,6 +19,7 @@ public class BlogResponse {
 	private String[] topics;
 	private String summary;
 	
+	private User user;
 	
 	
 	public int getBlogId() {
@@ -45,8 +46,25 @@ public class BlogResponse {
 	public void setSummary(String summary) {
 		this.summary = summary;
 	}
+	public BlogResponse(int blogId, String title, String[] topics, String summary, User user) {
+		super();
+		this.blogId = blogId;
+		this.title = title;
+		this.topics = topics;
+		this.summary = summary;
+		this.user = user;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 	
 	
-	
+	public BlogResponse()
+	{
+		
+	}
 
 }

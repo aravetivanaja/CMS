@@ -1,5 +1,9 @@
 package com.example.CMS.Security;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,9 +16,10 @@ public class CustomUserDetailsService implements UserDetailsService{
 	
 	private UserRepository userRepo;
 	
+	
 
 	public CustomUserDetailsService(UserRepository userRepo) {
-
+		
 		this.userRepo = userRepo;
 	}
 

@@ -17,15 +17,29 @@ public class UserResponse {
 	private String email;
 	private LocalDateTime createdAt;
 	private LocalDateTime lastModifiedAt;
+	private boolean deleted;
+	
+	
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
 
 	public UserResponse(int userId, String userName, String email, LocalDateTime createdAt,
-			LocalDateTime lastModifiedAt) {
+			LocalDateTime lastModifiedAt,boolean deleted) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
 		this.email = email;
 		this.createdAt = createdAt;
 		this.lastModifiedAt = lastModifiedAt;
+		this.deleted=deleted;
 	}
 
 

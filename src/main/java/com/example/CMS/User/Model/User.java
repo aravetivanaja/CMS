@@ -3,6 +3,7 @@ package com.example.CMS.User.Model;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -16,6 +17,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -52,7 +54,17 @@ public class User {
 	
 	private boolean deleted;
 	
+	@OneToMany
+	private List<Blog> blogs=new ArrayList<>();
 	
+	
+	
+	public List<Blog> getBlogs() {
+		return blogs;
+	}
+	public void setBlogs(List<Blog> blogs) {
+		this.blogs = blogs;
+	}
 	public boolean isDeleted() {
 		return deleted;
 	}

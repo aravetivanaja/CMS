@@ -27,12 +27,12 @@ public class SecurityConfig{
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
 	{
 		return http.csrf(csrf->csrf.disable())
-				.authorizeHttpRequests(auth ->auth.requestMatchers("/users/register")
-						.permitAll()//public
-						.anyRequest()//any request apart from url should be authenticate
-						.authenticated())
-						.formLogin(Customizer.withDefaults())//2 -tier  -->specifies default configuration
-						.build();//protection 
+				   .authorizeHttpRequests(auth->auth.requestMatchers("/users/register")
+				   .permitAll()//public
+				   .anyRequest()//any request apart from url should be authenticate
+				   .authenticated())
+				   .formLogin(Customizer.withDefaults())//2 -tier  -->specifies default configuration
+				   .build();//protection 
 	}
 
 	@Bean
