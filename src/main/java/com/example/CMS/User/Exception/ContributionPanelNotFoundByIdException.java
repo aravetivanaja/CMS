@@ -2,16 +2,9 @@ package com.example.CMS.User.Exception;
 
 public class ContributionPanelNotFoundByIdException extends RuntimeException{
 
-	private String message;
-
 	public ContributionPanelNotFoundByIdException(String message) {
-		super();
-		this.message = message;
+		super(message);
 	}
 
-	public String getMessage() {
-		return message;
-	}
-	
 	
 }
